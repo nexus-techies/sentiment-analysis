@@ -1,0 +1,3 @@
+[submodule "webscrapping"]
+	path = webscrapping
+	url = https://github.com/nexus-techies/webscrapping.git
