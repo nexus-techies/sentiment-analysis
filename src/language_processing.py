@@ -16,7 +16,7 @@ class nlp:
             self.data = json.load(file)
             for record in self.data:
                 nouns = [token for token,
-                pos in pos_tag(word_tokenize(record['content'])) if pos.startswith('N')]
+                pos in pos_tag(word_tokenize(record['review'])) if pos.startswith('N')]
                 # print(nouns)
                 record['nouns'] = nouns
 
