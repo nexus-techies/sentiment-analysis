@@ -13,6 +13,7 @@ def clean_data(product):
     clean.clean_reviews.remove_punctuations(product)
     clean.clean_reviews.remove_emojis(product)
     clean.clean_reviews.remove_whitespace(product)
+    clean.clean_reviews.remove_multiple_dots(product)
 
     product.df['review'] = product.reviews_data
     product.df['review_id'] = product.reviews_data.index

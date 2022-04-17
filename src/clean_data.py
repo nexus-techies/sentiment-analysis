@@ -53,3 +53,9 @@ class clean_reviews:
             return ' '.join(text.split())
 
         self.reviews_data = self.reviews_data.apply(lambda x: cleaning_whitespace(x))
+
+    def remove_multiple_dots(self):
+        def cleaning_dots(text):
+            return re.sub('\.+', '.', str(text))
+
+        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))
