@@ -8,7 +8,7 @@ def read_csv(path):
 
 
 def dump_to_json(json_path, keys, data):
-    row_number = 1
+    row_number = 0
     data_dump = []
     with open(json_path, "w") as json_file:
         for row in data:
@@ -19,4 +19,3 @@ def dump_to_json(json_path, keys, data):
                 data_dump.append(temp)
 
         json.dump(data_dump, json_file, indent=4, sort_keys=True)
-
