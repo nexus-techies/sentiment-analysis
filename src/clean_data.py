@@ -56,6 +56,12 @@ class clean_reviews:
 
     def remove_multiple_dots(self):
         def cleaning_dots(text):
-            return re.sub('\.+', '.', str(text))
+            return re.sub('\.+', ' ', str(text))
 
         self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))
+
+    def remove_special_symbols(self):
+        def cleaning_symbols(text):
+            return re.sub('[^A-Za-z0-9]+', ' ', text)
+
+        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_symbols(x))

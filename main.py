@@ -6,14 +6,16 @@ data_path = "./webscrapping/data.csv"
 csv_path = "./data/cleaned_data.csv"
 json_path = "./data/collected_data.json"
 matrix_path = "./data/binary_matrix.csv"
+freq_items_path = "./data/association_mapping.csv"
 
 def clean_data(product):
     clean.clean_reviews.make_review_lowercase(product)
     clean.clean_reviews.remove_urls(product)
     clean.clean_reviews.remove_punctuations(product)
     clean.clean_reviews.remove_emojis(product)
-    clean.clean_reviews.remove_whitespace(product)
     clean.clean_reviews.remove_multiple_dots(product)
+    clean.clean_reviews.remove_special_symbols(product)
+    clean.clean_reviews.remove_whitespace(product)
 
     product.df['review'] = product.reviews_data
     product.df['review_id'] = product.reviews_data.index
@@ -22,13 +24,10 @@ def clean_data(product):
 
 
 def sentiment_analysis(product):
-    csvreader = common.read_csv(csv_path)
-    header = next(csvreader)
-
-    common.dump_to_json(json_path, header, csvreader)
-    product.get_nouns(json_path)
+    product.get_nouns()
     product.generate_binary_matrix()
     product.dump_binary_matrix(matrix_path)
+    product.get_frequenct_items(freq_items_path)
 
 
 def main():
