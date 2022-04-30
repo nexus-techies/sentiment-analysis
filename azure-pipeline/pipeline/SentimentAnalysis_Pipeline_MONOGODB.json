@@ -75,7 +75,7 @@
 				}
 			},
 			{
-				"name": "Copy Review Data to MongoDB ",
+				"name": "Copy Review Data to MongoDB",
 				"type": "Copy",
 				"dependsOn": [
 					{
