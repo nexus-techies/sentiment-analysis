@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Scrape reviews data and save to datalake",
+				"name": "Web Scrape Reviews - Store in Azure Blob",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [
 					{
@@ -35,11 +35,11 @@
 				}
 			},
 			{
-				"name": "Sentiment Analysis",
+				"name": "Cleaning Scrapped Data",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
-						"activity": "Scrape reviews data and save to datalake",
+						"activity": "Web Scrape Reviews - Store in Azure Blob",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -58,11 +58,7 @@
 						"referenceName": "Cleaned",
 						"type": "NotebookReference"
 					},
-					"snapshot": true,
-					"sparkPool": {
-						"referenceName": "nexuspool",
-						"type": "BigDataPoolReference"
-					}
+					"snapshot": true
 				}
 			},
 			{
@@ -79,76 +75,11 @@
 				}
 			},
 			{
-				"name": "Copy Output CSV to JSON",
+				"name": "Copy Review Data to MongoDB ",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Sentiment Analysis",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"additionalColumns": [
-							{
-								"name": "review_id_new",
-								"value": "$$COLUMN:"
-							}
-						],
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"wildcardFolderPath": "CleanedCSV",
-							"wildcardFileName": "*",
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"sink": {
-						"type": "JsonSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings",
-							"copyBehavior": "MergeFiles"
-						},
-						"formatSettings": {
-							"type": "JsonWriteSettings",
-							"filePattern": "arrayOfObjects"
-						}
-					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "CSVtoJSONSourceDataset",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "CSVtoJSONSinkDataset",
-						"type": "DatasetReference"
-					}
-				]
-			},
-			{
-				"name": "Copy data to MongoDB Database",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Copy Output CSV to JSON",
+						"activity": "Convert To DB Schema",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -196,6 +127,114 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Review Language Processing",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Cleaning Scrapped Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Cleaned",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
+			},
+			{
+				"name": "Copy Product Data to MongoDB ",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Convert To DB Schema",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "MongoDbAtlasSink",
+						"writeBatchTimeout": "00:30:00",
+						"writeBehavior": "insert"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SinkDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"CollectionName": "reviews"
+						}
+					}
+				]
+			},
+			{
+				"name": "Convert To DB Schema",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Review Language Processing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Cleaned",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
 			}
 		],
 		"parameters": {
