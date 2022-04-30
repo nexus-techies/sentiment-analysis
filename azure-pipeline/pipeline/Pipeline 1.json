@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "SentimentAnalysis_Copy1",
-				"type": "SynapseNotebook",
+				"name": "Python1",
+				"type": "DatabricksSparkPython",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -15,14 +15,25 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"notebook": {
-						"referenceName": "Cleaned_Working_Sentimental",
-						"type": "NotebookReference"
-					},
-					"snapshot": true,
-					"sparkPool": {
-						"referenceName": "nexuspool",
-						"type": "BigDataPoolReference"
+					"pythonFile": "dbfs:/FileStore/tables/test.py"
+				}
+			},
+			{
+				"name": "Custom1",
+				"type": "Custom",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"referenceObjects": {
+						"linkedServices": [],
+						"datasets": []
 					}
 				}
 			}

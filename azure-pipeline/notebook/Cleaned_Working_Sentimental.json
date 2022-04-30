@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "53e31e30-9688-4c02-b7c0-4101a6ec2d6c"
+				"spark.autotune.trackingId": "31a4dc33-dddc-425b-811e-00b48f5390df"
 			}
 		},
 		"metadata": {
@@ -63,7 +63,7 @@
 					"import string\r\n",
 					"#from mlxtend.frequent_patterns import apriori"
 				],
-				"execution_count": 58
+				"execution_count": 66
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +85,7 @@
 					"nouns_csv_path= \"abfss://reviewsfilesystem@reviewsdatalake.dfs.core.windows.net/NounsCSV/\"\r\n",
 					"matrix_path= \"abfss://reviewsfilesystem@reviewsdatalake.dfs.core.windows.net/BinaryMatrix/\""
 				],
-				"execution_count": 59
+				"execution_count": 67
 			},
 			{
 				"cell_type": "markdown",
@@ -163,7 +163,7 @@
 					"\r\n",
 					"        self.frq_items.to_csv(freq_items_path)"
 				],
-				"execution_count": 60
+				"execution_count": 68
 			},
 			{
 				"cell_type": "markdown",
@@ -238,7 +238,7 @@
 					"\r\n",
 					"        json.dump(data_dump, json_file, indent=4, sort_keys=True)"
 				],
-				"execution_count": 61
+				"execution_count": 69
 			},
 			{
 				"cell_type": "markdown",
@@ -335,7 +335,7 @@
 					"\r\n",
 					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_symbols(x))"
 				],
-				"execution_count": 62
+				"execution_count": 70
 			},
 			{
 				"cell_type": "markdown",
@@ -381,7 +381,7 @@
 					"    df_to_SparkParquet(product.df, cleaned_parquet_path)\r\n",
 					""
 				],
-				"execution_count": 63
+				"execution_count": 71
 			},
 			{
 				"cell_type": "markdown",
@@ -416,7 +416,7 @@
 					"    product.dump_binary_matrix(matrix_path)\r\n",
 					"    #product.get_frequenct_items(freq_items_path)"
 				],
-				"execution_count": 64
+				"execution_count": 72
 			},
 			{
 				"cell_type": "markdown",
@@ -451,7 +451,7 @@
 					"clean_data(product)\r\n",
 					"sentiment_analysis(product)"
 				],
-				"execution_count": 65
+				"execution_count": 73
 			},
 			{
 				"cell_type": "code",
