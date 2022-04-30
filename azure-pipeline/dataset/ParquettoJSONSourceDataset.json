@@ -1,0 +1,70 @@
+{
+	"name": "ParquettoJSONSourceDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "CleanedParquet",
+				"fileSystem": "reviews-sentimental-analysis"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "title",
+				"type": "UTF8"
+			},
+			{
+				"name": "content",
+				"type": "UTF8"
+			},
+			{
+				"name": "date",
+				"type": "UTF8"
+			},
+			{
+				"name": "variant",
+				"type": "UTF8"
+			},
+			{
+				"name": "images",
+				"type": "UTF8"
+			},
+			{
+				"name": "verified",
+				"type": "UTF8"
+			},
+			{
+				"name": "author",
+				"type": "UTF8"
+			},
+			{
+				"name": "rating",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "product",
+				"type": "UTF8"
+			},
+			{
+				"name": "url",
+				"type": "UTF8"
+			},
+			{
+				"name": "review",
+				"type": "UTF8"
+			},
+			{
+				"name": "review_id",
+				"type": "INT64"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

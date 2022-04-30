@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "-- This is auto-generated code\nSELECT\n    [review_id]\nFROM\n    OPENROWSET(\n        BULK 'https://datalakereviews.dfs.core.windows.net/reviews-sentimental-analysis/CleanedCSV/**',\n        FORMAT = 'CSV',\n        PARSER_VERSION = '2.0',\n        HEADER_ROW=TRUE\n    ) AS [result]\n    where [review_id] is not null order by [review_id]\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "Reviews",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

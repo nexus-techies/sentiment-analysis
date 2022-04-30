@@ -1,0 +1,304 @@
+{
+	"name": "SentimentAnalysis_Pipeline_MYSQL",
+	"properties": {
+		"activities": [
+			{
+				"name": "Scrape reviews data and save to datalake",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [
+					{
+						"activity": "Set Review Url",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": " HttpTriggerReviews ",
+					"method": "POST",
+					"body": {
+						"value": "{\"name\":\"@{variables('url')}\"}\n",
+						"type": "Expression"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set Review Url",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "url",
+					"value": {
+						"value": "@pipeline().parameters.URL",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Copy NounsCSV to Mysql",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Scrape reviews data and save to datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureMySqlSink",
+						"writeBatchSize": 10000,
+						"writeBatchTimeout": "00:00:30"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "index",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "serial_no",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "title",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "title",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "content",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "content",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "date",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "dateOfReview",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "variant",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "variant",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "images",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "images",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "verified",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "verified",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "author",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "author",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "rating",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "rating",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "product",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "product",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "url",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "url",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "review",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "review",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "review_id",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "review_id",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "nouns",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "nouns",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "NounsCSVDataset",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileName": "with_nouns.csv"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "AzureMySqlTable_Nouns",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "w j,3nf"
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"URL": {
+				"type": "string",
+				"defaultValue": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
+			}
+		},
+		"variables": {
+			"url": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "MAIN"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-04-30T06:13:47Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

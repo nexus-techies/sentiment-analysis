@@ -1,0 +1,575 @@
+{
+	"name": "SCRAPE DATA",
+	"properties": {
+		"folder": {
+			"name": "TEST"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "nexuspool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "4bcd56bb-1cf1-4d78-9cf3-da740e8ae917"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"596ec635-a23e-4a3d-85dc-d40c73b789bd": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "title",
+										"1": "content",
+										"2": "date",
+										"3": "variant",
+										"4": "images",
+										"5": "verified",
+										"6": "author",
+										"7": "rating",
+										"8": "product",
+										"9": "url"
+									},
+									{
+										"0": "Good mid- ranger phone",
+										"1": "Reviewing after using it for last 3 days, bought from an offline store: 1. Display is superb with 120hz and 60hz refresh rate option. 2. Sound quality is good and loud from dual front speakers. 3. Camera is having upto 30x zoom and other pro features. It could have been bit better for wide angle but night mode is sufficiently good. 4. Comes with a 15W charger, but supports upto 25W fast & wireless charging. 5. Phone back is polycarbonate which looks decent enough to hold. One plus 9 may look more premium with all glass back but will be more delicate as well. 6. Snapdragon 865 processor is fast if not the fastest like SD888 on one plus 9. 7. 5G support - will support around 9 5G bands in future as compared to just 2 5G bands of one plus 9. S20FE 5G looks more future ready on paper. More 5G bands getting enabled with software updates on one plus 9 is debatable and need to wait n watch. 8. Phone is IP68 dust and water proof, which isn't offered by one plus 9. 9. Expandable memory upto 1TB support not offered by one plus 9. 10. Battery same 4500 mah on this phone as well as one plus  9 but latter comes with a 65W wrap charger. Verdict - GO FOR IT. One of the best mid- range segment phones from Samsung competing against one plus 9. Both having their own winning areas, boils down to one's own preferences.",
+										"2": "12 Apr 2021",
+										"3": "Colour: Cloud Navy Size name: 8GB Style name: With offer",
+										"4": "https://images-na.ssl-images-amazon.com/images/I/61b-fK7AJSL._SY88.jpg"
+									},
+									{
+										"0": "https://images-na.ssl-images-amazon.com/images/I/71-NO9cNGkL._SY88.jpg"
+									},
+									{
+										"0": "https://images-na.ssl-images-amazon.com/images/I/71yqSmif6cL._SY88.jpg\"",
+										"1": "No",
+										"2": "Aror Tech",
+										"3": "5.0",
+										"4": "Samsung Galaxy S20 FE 5G (Cloud Navy, 8GB RAM, 128GB Storage) with No Cost EMI & Additional Exchange Offers",
+										"5": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews&pageNumber=0"
+									},
+									{
+										"0": "Not up to the mark",
+										"1": "no sim card pin, there was no headphone. packing was not up to the mark ,with respect to the price of the product The product heats up very fast",
+										"2": "14 Apr 2021",
+										"5": "Yes",
+										"6": "Ashraf ali",
+										"7": "3.0",
+										"8": "Samsung Galaxy S20 FE 5G (Cloud Navy, 8GB RAM, 128GB Storage) with No Cost EMI & Additional Exchange Offers",
+										"9": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews&pageNumber=0"
+									},
+									{
+										"0": "Best phone below 50k hands down..",
+										"1": "I was using OnePlus 5t for last 3 years. Thought of changing the phone and after made lot of research choose samsung s20 fe over OnePlus 9 and till date I don't have any regret for that.. it's simply an amazing phone. Pros: 1. Camera: Please don't go with the camera mega pixel and sensors specifications.. it's all just a number, in the end it only matters how good the picture is. Samsung is way way better than OnePlus in this aspect. Added few examples above. 2. Display: 120 hz super amoled display by samsung, what else you want. 3. Sound: crisp and clear with dual speakers.. 4. Battery: easily it gives me 10 hrs on screen back up, not a gamer though. Cons: 1. 15w charger is just less imo, 25w would have been ideal. 2. Brightness could have been more, not a major problem though. 3. Very new to one ui, but as per the initial impression oxygen os was better. 4. Fingerprint reader could have been better. Edit: OneUI is awesome.. may be oxygen os is simple and easy to use..but one UI has lot of useful features based on AI. Too good in my opinion.",
+										"2": "09 May 2021",
+										"3": "Colour: Cloud Navy Size name: 8GB Style name: With offer",
+										"4": "https://images-na.ssl-images-amazon.com/images/I/91NRZcd3x8L._SY88.jpg"
+									},
+									{
+										"0": "https://images-na.ssl-images-amazon.com/images/I/B1UO+L1zmbS._SY88.jpg"
+									},
+									{
+										"0": "https://images-na.ssl-images-amazon.com/images/I/B1d96r2S4tS._SY88.jpg"
+									},
+									{
+										"0": "https://images-na.ssl-images-amazon.com/images/I/C1uqLf24cCS._SY88.jpg\"",
+										"1": "Yes",
+										"2": "Swarnendu Chaudhuri",
+										"3": "5.0",
+										"4": "Samsung Galaxy S20 FE 5G (Cloud Navy, 8GB RAM, 128GB Storage) with No Cost EMI & Additional Exchange Offers",
+										"5": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews&pageNumber=0"
+									},
+									{
+										"0": "VFM Flagship phone from Samsung",
+										"1": "Writing this review after 3 months of usage. Will divide this review into pros and cons. First, the Pros: 1.Software and One UI-Many people complain that One UI is bloated and it's bad compared to stock android or other brands.This is not the case, It comes with a lot of useful features like improved security (knox) and app management. There are no ADS apart from a couple of apps like weather which can be disabled, Also, ads will be disabled in future updates. Samsung also is excellent in providing software and security updates,with 3years software support.So you won't feel let down on the software experience. 2.Performance-Snapdragon 865 is Snappy and efficient, no lags whatsoever Can handle heavy applications and games thanks to 8 GB RAM, improved thermal and battery performance compared to exynos variant.Lot of people complaining about Samsung phones heating up, There is a difference between getting warm and heating up. This device never heats up and getting warm is normal on any smartphone. this is not the case only with Samsung but I have used phones from other brands and they too get warm after using it for an hour or so continuously. . I'm not a samsung fan but criticizing a product without proper research can prevent prospective users from buying good products. 3.Network Connectivity: Have used the phone while traveling and did not experience network drops, Radio reception is very good and call experience was great. 4.Camera: This device comes with good set of cameras (triple camera)and takes great pictures, Samsung's camera optimization is good compared to competition at this price point. 5.Sound and Media experience: Excellent sound output thanks to dual stereo speakers, watching media even without a headset is a great experience. Comes with dolby atmos support. Amazing experience with galaxy buds 2 which you can buy separately. 6.Display-Samoled Display is amazing. Supports upto 120hz refresh rate which makes things buttery smooth.The color reproduction is excellent and samsung makes displays for other renowned brands.Supports HDR videos, tested on YouTube but doesn't work on Netflix because Netflix has to certify the device and not a problem with the device. Overall, media consumption has been a great experience. 7.Great build quality: The phone can survive a few drops. Front is corning gorilla glass 3 back is premium plastic with metal frame. The phone is also IP68 certified for dust and water resistance. 8.Battery: This is not exactly a pro but included in the pro section because there are a lot of people criticizing battery life. The battery performance is neither a pro nor a con, similar to other devices available at this price point.The device has a 4500 MAH battery and easily lasts a day and half with heavy to moderate use and standby will last even longer, I charge the phone once a day, which is similar to all the smartphones in this price range. You can easily expect a screen on time of 7 to 8 hours which not really something that deserves criticizing. 9.5G ready with 9 5g bands. Cons: 1. Only 15 watt charger included in the box by samsung which takes atleast 1.5 hours to charge the phone. Could have been better with atleast a 25 watt charger in the box. When competitors are providing 30+ watt chargers in this price range. 2.Fingerprint scanner: comes with an in display fingerprint sensor which works well most of the time but it is clumsy at times. 3.Average front camera. Verdict: value for money smartphone at this pricepoint. A good smartphone investment for the next couple or 3 years.I liked this device and again it is personal preference. I have made an effort to highlight the device's pros and cons which could help a prospective buyer.",
+										"2": "28 Sep 2021",
+										"3": "Colour: Cloud Navy Size name: 8GB Style name: With offer",
+										"5": "Yes",
+										"6": "NS",
+										"7": "5.0",
+										"8": "Samsung Galaxy S20 FE 5G (Cloud Navy, 8GB RAM, 128GB Storage) with No Cost EMI & Additional Exchange Offers",
+										"9": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews&pageNumber=0"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "_c0",
+										"type": "string"
+									},
+									{
+										"key": "1",
+										"name": "_c1",
+										"type": "string"
+									},
+									{
+										"key": "2",
+										"name": "_c2",
+										"type": "string"
+									},
+									{
+										"key": "3",
+										"name": "_c3",
+										"type": "string"
+									},
+									{
+										"key": "4",
+										"name": "_c4",
+										"type": "string"
+									},
+									{
+										"key": "5",
+										"name": "_c5",
+										"type": "string"
+									},
+									{
+										"key": "6",
+										"name": "_c6",
+										"type": "string"
+									},
+									{
+										"key": "7",
+										"name": "_c7",
+										"type": "string"
+									},
+									{
+										"key": "8",
+										"name": "_c8",
+										"type": "string"
+									},
+									{
+										"key": "9",
+										"name": "_c9",
+										"type": "string"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala"
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "count",
+									"categoryFieldKeys": [
+										"0"
+									],
+									"seriesFieldKeys": [
+										"0"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/9595214b-b979-4c88-93c7-3a2e8742a403/resourceGroups/team-nexus/providers/Microsoft.Synapse/workspaces/synapse-reviews/bigDataPools/nexuspool",
+				"name": "nexuspool",
+				"type": "Spark",
+				"endpoint": "https://synapse-reviews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/nexuspool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"collapsed": false
+				},
+				"source": [
+					"import pandas as pd"
+				],
+				"attachments": null,
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"yamlFile = \"abfss://test@datalakereviews.dfs.core.windows.net/WebScraping/selectors.yml\"\r\n",
+					"urlsFile =\"abfss://test@datalakereviews.dfs.core.windows.net/WebScraping/urls.txt\"\r\n",
+					"#abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/Reviews_20220422214922.csv\r\n",
+					"outputFile2 = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData2/\"\r\n",
+					"outputFile = \"https://web.azuresynapse.net/en/authoring/explore/linked/storageaccounts/synapse-reviews-WorkspaceDefaultStorage-datalakereviews%2Ftest?livyId=5&sparkPoolName=nexuspool&subFolderPath=WebScraping%2FOutputData&workspace=%2Fsubscriptions%2F9595214b-b979-4c88-93c7-3a2e8742a403%2FresourceGroups%2Fteam-nexus%2Fproviders%2FMicrosoft.Synapse%2Fworkspaces%2Fsynapse-reviews\""
+				],
+				"attachments": null,
+				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from selectorlib import Extractor\r\n",
+					"import requests\r\n",
+					"import csv\r\n",
+					"from dateutil import parser as dateparser "
+				],
+				"attachments": null,
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create an Extractor by reading from the YAML file\r\n",
+					"yamlString = \"\"\"product_title:\r\n",
+					"    css: 'h1 a[data-hook=\"product-link\"]'\r\n",
+					"    type: Text\r\n",
+					"reviews:\r\n",
+					"    css: 'div.review div.a-section.celwidget'\r\n",
+					"    multiple: true\r\n",
+					"    type: Text\r\n",
+					"    children:\r\n",
+					"        title:\r\n",
+					"            css: a.review-title\r\n",
+					"            type: Text\r\n",
+					"        content:\r\n",
+					"            css: 'div.a-row.review-data span.review-text'\r\n",
+					"            type: Text\r\n",
+					"        date:\r\n",
+					"            css: span.a-size-base.a-color-secondary\r\n",
+					"            type: Text\r\n",
+					"        variant:\r\n",
+					"            css: 'a.a-size-mini'\r\n",
+					"            type: Text\r\n",
+					"        images:\r\n",
+					"            css: img.review-image-tile\r\n",
+					"            multiple: true\r\n",
+					"            type: Attribute\r\n",
+					"            attribute: src\r\n",
+					"        verified:\r\n",
+					"            css: 'span[data-hook=\"avp-badge\"]'\r\n",
+					"            type: Text\r\n",
+					"        author:\r\n",
+					"            css: span.a-profile-name\r\n",
+					"            type: Text\r\n",
+					"        rating:\r\n",
+					"            css: 'div.a-row:nth-of-type(2) > a.a-link-normal:nth-of-type(1)'\r\n",
+					"            type: Attribute\r\n",
+					"            attribute: title\r\n",
+					"next_page:\r\n",
+					"    css: 'li.a-last a'\r\n",
+					"    type: Link\"\"\"\r\n",
+					"\r\n",
+					"e = Extractor.from_yaml_string(yamlString)\r\n",
+					"\r\n",
+					"review_page_limit = 4\r\n",
+					"pagination_index = 10"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def scrape(url):\r\n",
+					"    headers = {\r\n",
+					"        'authority': 'www.amazon.com',\r\n",
+					"        'pragma': 'no-cache',\r\n",
+					"        'cache-control': 'no-cache',\r\n",
+					"        'dnt': '1',\r\n",
+					"        'upgrade-insecure-requests': '1',\r\n",
+					"        'user-agent': 'Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36',\r\n",
+					"        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',\r\n",
+					"        'sec-fetch-site': 'none',\r\n",
+					"        'sec-fetch-mode': 'navigate',\r\n",
+					"        'sec-fetch-dest': 'document',\r\n",
+					"        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',\r\n",
+					"    }\r\n",
+					"\r\n",
+					"    # Download the page using requests\r\n",
+					"    print(\"Downloading %s\"%url)\r\n",
+					"    r = requests.get(url, headers=headers)\r\n",
+					"    # Simple check to check if page was blocked (Usually 503)\r\n",
+					"    if r.status_code > 500:\r\n",
+					"        if \"To discuss automated access to Amazon data please contact\" in r.text:\r\n",
+					"            print(\"Page %s was blocked by Amazon. Please try using better proxies\\n\"%url)\r\n",
+					"        else:\r\n",
+					"            print(\"Page %s must have been blocked by Amazon as the status code was %d\"%(url,r.status_code))\r\n",
+					"        return None\r\n",
+					"    # Pass the HTML of the page and create\r\n",
+					"    return e.extract(r.text)"
+				],
+				"attachments": null,
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def create_urllist(url):\r\n",
+					"    if \"amazon\" in url.lower():\r\n",
+					"        return url + \"&pageNumber=\"\r\n",
+					"    else:\r\n",
+					"        return url + \"&page=\""
+				],
+				"attachments": null,
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"url_raw = \"https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews\"\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Listl=[]\r\n",
+					"for i in range(review_page_limit):\r\n",
+					"    url = create_urllist(url_raw) + str(i)\r\n",
+					"    data = scrape(url)\r\n",
+					"    ty= type(data)\r\n",
+					"    print(ty)\r\n",
+					"    \r\n",
+					"    if data:\r\n",
+					"        try:\r\n",
+					"            for r in data['reviews']:\r\n",
+					"                r[\"product\"] = data[\"product_title\"]\r\n",
+					"                r['url'] = url\r\n",
+					"                if 'verified' in r and r['verified']:\r\n",
+					"                    if 'Verified Purchase' in r['verified']:\r\n",
+					"                        r['verified'] = 'Yes'\r\n",
+					"                    else:\r\n",
+					"                        r['verified'] = 'Yes'\r\n",
+					"                else:\r\n",
+					"                    r['verified'] = 'No'\r\n",
+					"                r['rating'] = r['rating'].split(' out of')[0]\r\n",
+					"                date_posted = r['date'].split('on ')[-1]\r\n",
+					"                if r['images']:\r\n",
+					"                    r['images'] = \"\\n\".join(r['images'])\r\n",
+					"                r['date'] = dateparser.parse(date_posted).strftime('%d %b %Y')\r\n",
+					"                Listl.append(r)\r\n",
+					"        except TypeError:\r\n",
+					"            break\r\n",
+					"            \r\n",
+					"df = pd.DataFrame(Listl)\r\n",
+					"cols= df.columns\r\n",
+					"print(cols)\r\n",
+					"   "
+				],
+				"attachments": null,
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sparkDF=spark.createDataFrame(df) \r\n",
+					"sparkDF.printSchema()"
+				],
+				"attachments": null,
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"sparkDF.write.option(\"header\",True).csv(outputFile2)\r\n",
+					"#df.to_csv(outputFile2, encoding='utf-8', index=False)"
+				],
+				"attachments": null,
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/Reviews_20220422214922.csv', format='csv'\r\n",
+					"## If header exists uncomment line below\r\n",
+					"##, header=True\r\n",
+					")\r\n",
+					"display(df.limit(10))"
+				],
+				"attachments": null,
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import nltk"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

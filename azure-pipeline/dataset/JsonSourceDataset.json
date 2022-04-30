@@ -1,0 +1,61 @@
+{
+	"name": "JsonSourceDataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "jsonWithNouns.json",
+				"folderPath": "JSONwithNouns",
+				"fileSystem": "reviews-sentimental-analysis"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"title": {
+					"type": "string"
+				},
+				"content": {
+					"type": "string"
+				},
+				"date": {
+					"type": "string"
+				},
+				"variant": {
+					"type": "string"
+				},
+				"images": {
+					"type": "string"
+				},
+				"verified": {
+					"type": "string"
+				},
+				"author": {
+					"type": "string"
+				},
+				"rating": {
+					"type": "number"
+				},
+				"product": {
+					"type": "string"
+				},
+				"url": {
+					"type": "string"
+				},
+				"review": {
+					"type": "string"
+				},
+				"review_id": {
+					"type": "integer"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

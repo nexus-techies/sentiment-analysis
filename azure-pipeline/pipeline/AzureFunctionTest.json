@@ -1,0 +1,37 @@
+{
+	"name": "AzureFunctionTest",
+	"properties": {
+		"activities": [
+			{
+				"name": "Azure Function Test",
+				"type": "AzureFunctionActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"functionName": " HttpTriggerReviews ",
+					"method": "POST",
+					"body": {
+						"name": "https://www.amazon.in/Samsung-Galaxy-Cloud-128GB-Storage/product-reviews/B08VB57558/ref=cm_cr_dp_d_show_all_btm?ie=UTF8&reviewerType=all_reviews"
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureFunction",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "TEST"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-04-30T03:47:20Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
