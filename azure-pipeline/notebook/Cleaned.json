@@ -1,0 +1,552 @@
+{
+	"name": "Cleaned",
+	"properties": {
+		"folder": {
+			"name": "WORKING"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "nexuspool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "0d04e99b-e9b2-459c-a9f4-0f573a401be9"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/9595214b-b979-4c88-93c7-3a2e8742a403/resourceGroups/team-nexus/providers/Microsoft.Synapse/workspaces/synapse-reviews/bigDataPools/nexuspool",
+				"name": "nexuspool",
+				"type": "Spark",
+				"endpoint": "https://synapse-reviews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/nexuspool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import json\r\n",
+					"import numpy as np\r\n",
+					"import pandas as pd\r\n",
+					"import nltk\r\n",
+					"from nltk import word_tokenize, pos_tag\r\n",
+					"import re\r\n",
+					"import string"
+				],
+				"attachments": null,
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"data_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/**\"\r\n",
+					"cleaned_csv_path = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedCSV/\"\r\n",
+					"cleaned_parquet_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedParquet/\"\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### NLP"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"class nlp:\r\n",
+					"\r\n",
+					"    def __init__(self) -> None:\r\n",
+					"        \"\"\"import nltk\r\n",
+					"        nltk.download('punkt')\r\n",
+					"        nltk.download('averaged_perceptron_tagger')\"\"\"\r\n",
+					"\r\n",
+					"\r\n",
+					"    def get_nouns(self, json_file_path):\r\n",
+					"        with open(json_file_path) as file:\r\n",
+					"            self.data = json.load(file)\r\n",
+					"            for record in self.data:\r\n",
+					"                nouns = [token for token,\r\n",
+					"                pos in pos_tag(word_tokenize(record['review'])) if pos.startswith('N')]\r\n",
+					"                # print(nouns)\r\n",
+					"                record['nouns'] = nouns\r\n",
+					"\r\n",
+					"        with open(json_file_path, \"w\") as f:\r\n",
+					"            json.dump(self.data, f)\r\n",
+					"\r\n",
+					"\r\n",
+					"    def dump_binary_matrix(self, matrix_path):\r\n",
+					"        df = pd.DataFrame(\r\n",
+					"            self.binary_matrix, index=range(self.reviews_count), columns=self.net_nouns)\r\n",
+					"        df.to_csv(matrix_path, index=True, header=True)\r\n",
+					"\r\n",
+					"\r\n",
+					"    def generate_binary_matrix(self):\r\n",
+					"        self.reviews_count = len(self.data)\r\n",
+					"        self.net_nouns = []\r\n",
+					"        for review in self.data:\r\n",
+					"            for noun in review['nouns']:\r\n",
+					"                if noun not in self.net_nouns:\r\n",
+					"                    self.net_nouns.append(noun)\r\n",
+					"\r\n",
+					"        self.shape = (self.reviews_count, len(self.net_nouns))\r\n",
+					"        self.binary_matrix = np.zeros(self.shape)\r\n",
+					"        self.binary_matrix = self.binary_matrix.astype(int)\r\n",
+					"\r\n",
+					"        for review in self.data:\r\n",
+					"            for noun in review['nouns']:\r\n",
+					"                self.binary_matrix[review['review_id']][self.net_nouns.index(noun)] = 1"
+				],
+				"attachments": null,
+				"execution_count": 18
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Common Functions"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def create_df_from_csv(csv_path):\r\n",
+					"    data = pd.read_csv(csv_path, skip_blank_lines=True)\r\n",
+					"    data = data.dropna(how=\"all\").reset_index(drop=True)\r\n",
+					"    return data\r\n",
+					"\r\n",
+					"\r\n",
+					"def read_csv(path):\r\n",
+					"    file = open(path, encoding='utf8')\r\n",
+					"    return csv.reader(file)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_json(df, json_path):\r\n",
+					"    df.to_json(json_path, orient='records', lines=True)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_csv(df, csv_path):\r\n",
+					"    df.to_csv(csv_path)\r\n",
+					"\r\n",
+					"def df_to_Sparkcsv(df, cleaned_csv_path):\r\n",
+					"    sparkDF=spark.createDataFrame(df) \r\n",
+					"    display(sparkDF)\r\n",
+					"    sparkDF.printSchema()\r\n",
+					"    sparkDF.write.mode(\"overwrite\").option(\"header\",True).csv(cleaned_csv_path)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_SparkParquet(df, cleaned_parquet_path):\r\n",
+					"    sparkDF=spark.createDataFrame(df) \r\n",
+					"    display(sparkDF)\r\n",
+					"    sparkDF.printSchema()\r\n",
+					"    sparkDF.write.mode('overwrite').parquet(cleaned_parquet_path)\r\n",
+					"\r\n",
+					"\r\n",
+					"def dump_to_json(json_path, keys, data):\r\n",
+					"    row_number = 0\r\n",
+					"    data_dump = []\r\n",
+					"    with open(json_path, \"w\") as json_file:\r\n",
+					"        for row in data:\r\n",
+					"            if any(row):\r\n",
+					"                temp = dict(zip(keys, row))\r\n",
+					"                temp[\"review_id\"] = row_number\r\n",
+					"                row_number+=1\r\n",
+					"                data_dump.append(temp)\r\n",
+					"\r\n",
+					"        json.dump(data_dump, json_file, indent=4, sort_keys=True)\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 19
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Clean Reviews"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"class clean_reviews:\r\n",
+					"    def make_review_lowercase(self):\r\n",
+					"        self.reviews_data = self.df['content'].str.lower()\r\n",
+					"\r\n",
+					"    def remove_urls(self):\r\n",
+					"        def cleaning_url(text):\r\n",
+					"            return re.sub('((https?://[^\\s]+)|(http?://[^\\s]+)|(www\\.[^\\s]+))','',str(text))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_url(x))\r\n",
+					"\r\n",
+					"    def remove_punctuations(self):\r\n",
+					"        include = string.punctuation\r\n",
+					"        include = include.replace(\".\", \"\")\r\n",
+					"        include = include.replace(\"-\", \"\")\r\n",
+					"\r\n",
+					"        def cleaning_punctuation(text):\r\n",
+					"            return text.translate(str.maketrans('','',include))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_punctuation(x))\r\n",
+					"\r\n",
+					"    def remove_emojis(self):\r\n",
+					"        def cleaning_emojis(data):\r\n",
+					"            emoj = re.compile(\"[\"\r\n",
+					"                u\"\\U0001F600-\\U0001F64F\"  # emoticons\r\n",
+					"                u\"\\U0001F300-\\U0001F5FF\"  # symbols & pictographs\r\n",
+					"                u\"\\U0001F680-\\U0001F6FF\"  # transport & map symbols\r\n",
+					"                u\"\\U0001F1E0-\\U0001F1FF\"  # flags (iOS)\r\n",
+					"                u\"\\U00002500-\\U00002BEF\"  # chinese char\r\n",
+					"                u\"\\U00002702-\\U000027B0\"\r\n",
+					"                u\"\\U00002702-\\U000027B0\"\r\n",
+					"                u\"\\U000024C2-\\U0001F251\"\r\n",
+					"                u\"\\U0001f926-\\U0001f937\"\r\n",
+					"                u\"\\U00010000-\\U0010ffff\"\r\n",
+					"                u\"\\u2640-\\u2642\"\r\n",
+					"                u\"\\u2600-\\u2B55\"\r\n",
+					"                u\"\\u200d\"\r\n",
+					"                u\"\\u23cf\"\r\n",
+					"                u\"\\u23e9\"\r\n",
+					"                u\"\\u231a\"\r\n",
+					"                u\"\\ufe0f\"  # dingbats\r\n",
+					"                u\"\\u3030\"\r\n",
+					"                            \"]+\", re.UNICODE)\r\n",
+					"            return re.sub(emoj, '', data)\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_emojis(x))\r\n",
+					"\r\n",
+					"    def remove_whitespace(self):\r\n",
+					"        def cleaning_whitespace(text):\r\n",
+					"            return ' '.join(text.split())\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_whitespace(x))\r\n",
+					"\r\n",
+					"    def remove_multiple_dots(self):\r\n",
+					"        def cleaning_dots(text):\r\n",
+					"            return re.sub('\\.+', '.', str(text))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))"
+				],
+				"attachments": null,
+				"execution_count": 20
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Clean Data Function"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def clean_data(product):\r\n",
+					"    clean_reviews.make_review_lowercase(product)\r\n",
+					"    clean_reviews.remove_urls(product)\r\n",
+					"    clean_reviews.remove_punctuations(product)\r\n",
+					"    clean_reviews.remove_emojis(product)\r\n",
+					"    clean_reviews.remove_whitespace(product)\r\n",
+					"    clean_reviews.remove_multiple_dots(product)\r\n",
+					"\r\n",
+					"    product.df['review'] = product.reviews_data\r\n",
+					"    product.df['review_id'] = product.reviews_data.index\r\n",
+					"\r\n",
+					"    df_to_Sparkcsv(product.df, cleaned_csv_path)\r\n",
+					"    df_to_SparkParquet(product.df, cleaned_parquet_path)"
+				],
+				"attachments": null,
+				"execution_count": 21
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Sentiment Analysis Function"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def sentiment_analysis(product):\r\n",
+					"    csvreader = read_csv(cleaned_csv_path)\r\n",
+					"    header = next(csvreader)\r\n",
+					"\r\n",
+					"    dump_to_json(json_path, header, csvreader)\r\n",
+					"    product.get_nouns(json_path)\r\n",
+					"    product.generate_binary_matrix()\r\n",
+					"    product.dump_binary_matrix(matrix_path)"
+				],
+				"attachments": null,
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### MAIN CODE"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"product = nlp()"
+				],
+				"attachments": null,
+				"execution_count": 23
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"product.df = create_df_from_csv(data_path)\r\n",
+					"d1f= product.df\r\n",
+					"display(d1f)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print(d1f.columns)"
+				],
+				"attachments": null,
+				"execution_count": 25
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"clean_data(product)"
+				],
+				"attachments": null,
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#sentiment_analysis(product)"
+				],
+				"attachments": null,
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}

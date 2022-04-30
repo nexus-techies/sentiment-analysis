@@ -1,0 +1,21 @@
+{
+	"name": "AzureMySqlTable_Nouns",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureMySql",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureMySqlTable",
+		"schema": [],
+		"typeProperties": {
+			"tableName": "reviews_with_nouns"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

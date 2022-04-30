@@ -1,0 +1,515 @@
+{
+	"name": "SentimentAnalysis_Copy1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "nexuspool2",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "ee0b4311-df5a-4eca-b7b0-e757a34a1c00"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/9595214b-b979-4c88-93c7-3a2e8742a403/resourceGroups/team-nexus/providers/Microsoft.Synapse/workspaces/synapse-reviews/bigDataPools/nexuspool2",
+				"name": "nexuspool2",
+				"type": "Spark",
+				"endpoint": "https://synapse-reviews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/nexuspool2",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"import json\r\n",
+					"import numpy as np\r\n",
+					"import pandas as pd\r\n",
+					"import nltk\r\n",
+					"from nltk import word_tokenize, pos_tag\r\n",
+					"import re\r\n",
+					"import string\r\n",
+					"from pyspark.sql.functions import monotonically_increasing_id\r\n",
+					"import json\r\n",
+					"from nltk import word_tokenize, pos_tag\r\n",
+					"import numpy as np\r\n",
+					"import pandas as pd\r\n",
+					"from mlxtend.frequent_patterns import apriori"
+				],
+				"attachments": null,
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from nltk.corpus import stopwords\r\n",
+					"from nltk import download as nltk_download"
+				],
+				"attachments": null,
+				"execution_count": 28
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import os\r\n",
+					"import sys\r\n",
+					"import nltk\r\n",
+					"from pyspark import SparkFiles\r\n",
+					"    \r\n",
+					"\"\"\"#add stopwords from storage\r\n",
+					"sc.addFile('https://datalakereviews.dfs.core.windows.net/reviews-sentimental-analysis/Packages/nltk/**',True)\r\n",
+					"    \r\n",
+					"#append path to NLTK\r\n",
+					"nltk.data.path.append(SparkFiles.getRootDirectory() + '/nltk')\r\n",
+					"    \r\n",
+					"#nltk.corpus.stopwords.words('english')\r\n",
+					"\"\"\""
+				],
+				"attachments": null,
+				"execution_count": 29
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#nltk_download('nltk', download_dir=\"https://datalakereviews.dfs.core.windows.net/reviews-sentimental-analysis/Packages/nltk/\", raise_on_error=False)"
+				],
+				"attachments": null,
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import mlxtend\r\n",
+					"from mlxtend.frequent_patterns import apriori\r\n",
+					"from mlxtend.frequent_patterns import association_rules"
+				],
+				"attachments": null,
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"data_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/**\"\r\n",
+					"\r\n",
+					"cleaned_csv_path = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedCSV/\"\r\n",
+					"cleaned_parquet_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedParquet/\"\r\n",
+					"\r\n",
+					"cleaned_csvfile_path = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedCSV/**\"\r\n",
+					"\r\n",
+					"json_path1= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/JsonFiles1/\"\r\n",
+					"json_file_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/JsonFiles1/**\"\r\n",
+					"json_file_path2= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/JsonFiles1/**\"\r\n",
+					"\r\n",
+					"matrix_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/matrixPath/\"\r\n",
+					"freq_items_path = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/freq_items_path/\""
+				],
+				"attachments": null,
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"class nlp:\r\n",
+					"\r\n",
+					"    def __init__(self) -> None:\r\n",
+					"        \"\"\"import nltk\r\n",
+					"        nltk.download('punkt')\r\n",
+					"        nltk.download('averaged_perceptron_tagger')\"\"\"\r\n",
+					"\r\n",
+					"\r\n",
+					"    def get_nouns(self):\r\n",
+					"        def apply_tokenization(review):\r\n",
+					"            return [token for token,\r\n",
+					"         pos in pos_tag(word_tokenize(review)) if pos.startswith('N')]\r\n",
+					"\r\n",
+					"        def remove_smaller_nouns(nouns):\r\n",
+					"            return [noun for noun in nouns if len(noun) >= 3]\r\n",
+					"\r\n",
+					"        self.df['nouns'] = self.df['review'].apply(lambda x: apply_tokenization(x))\r\n",
+					"        self.df['nouns'] = self.df['nouns'].apply(lambda x: remove_smaller_nouns(x))\r\n",
+					"\r\n",
+					"\r\n",
+					"    def dump_binary_matrix(self, matrix_path):\r\n",
+					"        df = pd.DataFrame(\r\n",
+					"            self.binary_matrix, index=range(self.reviews_count), columns=self.net_nouns)\r\n",
+					"        df.to_csv(matrix_path, index=True, header=True)\r\n",
+					"\r\n",
+					"\r\n",
+					"    def generate_binary_matrix(self):\r\n",
+					"        self.reviews_count = self.df.shape[0]\r\n",
+					"        self.net_nouns = self.df['nouns'].apply(tuple).explode().unique()\r\n",
+					"       \r\n",
+					"        self.shape = (self.reviews_count, len(self.net_nouns))\r\n",
+					"        self.binary_matrix = np.zeros(self.shape)\r\n",
+					"        self.binary_matrix = self.binary_matrix.astype(int)\r\n",
+					"\r\n",
+					"        for review in self.df.iterrows():\r\n",
+					"            for noun in review[1]['nouns']:\r\n",
+					"                self.binary_matrix[review[1]['review_id']][int(np.where(self.net_nouns == noun)[0])] = 1\r\n",
+					"        \r\n",
+					"        self.df.to_csv(\"./data/with_nouns.csv\")\r\n",
+					"\r\n",
+					"\r\n",
+					"    \"\"\"def get_frequenct_items(self, freq_items_path):\r\n",
+					"        self.binary_matrix_df = pd.DataFrame(data=self.binary_matrix[1:,1:], index=self.binary_matrix[1:,0], \r\n",
+					"        columns=self.binary_matrix[0,1:])  \r\n",
+					"        self.frq_items = apriori(self.binary_matrix_df.iloc[:, 1:], min_support = 0.01, use_colnames = True)\r\n",
+					"\r\n",
+					"        self.frq_items.to_csv(freq_items_path)\"\"\""
+				],
+				"attachments": null,
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import re\r\n",
+					"import string\r\n",
+					"\r\n",
+					"\r\n",
+					"class clean_reviews:\r\n",
+					"    def make_review_lowercase(self):\r\n",
+					"        self.reviews_data = self.df['content'].str.lower()\r\n",
+					"\r\n",
+					"    def remove_urls(self):\r\n",
+					"        def cleaning_url(text):\r\n",
+					"            return re.sub('((https?://[^\\s]+)|(http?://[^\\s]+)|(www\\.[^\\s]+))','',str(text))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_url(x))\r\n",
+					"\r\n",
+					"    def remove_punctuations(self):\r\n",
+					"        include = string.punctuation\r\n",
+					"        include = include.replace(\".\", \"\")\r\n",
+					"        include = include.replace(\"-\", \"\")\r\n",
+					"\r\n",
+					"        def cleaning_punctuation(text):\r\n",
+					"            return text.translate(str.maketrans('','',include))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_punctuation(x))\r\n",
+					"\r\n",
+					"    def remove_emojis(self):\r\n",
+					"        def cleaning_emojis(data):\r\n",
+					"            emoj = re.compile(\"[\"\r\n",
+					"                u\"\\U0001F600-\\U0001F64F\"  # emoticons\r\n",
+					"                u\"\\U0001F300-\\U0001F5FF\"  # symbols & pictographs\r\n",
+					"                u\"\\U0001F680-\\U0001F6FF\"  # transport & map symbols\r\n",
+					"                u\"\\U0001F1E0-\\U0001F1FF\"  # flags (iOS)\r\n",
+					"                u\"\\U00002500-\\U00002BEF\"  # chinese char\r\n",
+					"                u\"\\U00002702-\\U000027B0\"\r\n",
+					"                u\"\\U00002702-\\U000027B0\"\r\n",
+					"                u\"\\U000024C2-\\U0001F251\"\r\n",
+					"                u\"\\U0001f926-\\U0001f937\"\r\n",
+					"                u\"\\U00010000-\\U0010ffff\"\r\n",
+					"                u\"\\u2640-\\u2642\"\r\n",
+					"                u\"\\u2600-\\u2B55\"\r\n",
+					"                u\"\\u200d\"\r\n",
+					"                u\"\\u23cf\"\r\n",
+					"                u\"\\u23e9\"\r\n",
+					"                u\"\\u231a\"\r\n",
+					"                u\"\\ufe0f\"  # dingbats\r\n",
+					"                u\"\\u3030\"\r\n",
+					"                            \"]+\", re.UNICODE)\r\n",
+					"            return re.sub(emoj, '', data)\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_emojis(x))\r\n",
+					"\r\n",
+					"    def remove_whitespace(self):\r\n",
+					"        def cleaning_whitespace(text):\r\n",
+					"            return ' '.join(text.split())\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_whitespace(x))\r\n",
+					"\r\n",
+					"    def remove_multiple_dots(self):\r\n",
+					"        def cleaning_dots(text):\r\n",
+					"            return re.sub('\\.+', ' ', str(text))\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))\r\n",
+					"\r\n",
+					"    def remove_special_symbols(self):\r\n",
+					"        def cleaning_symbols(text):\r\n",
+					"            return re.sub('[^A-Za-z0-9]+', ' ', text)\r\n",
+					"\r\n",
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_symbols(x))"
+				],
+				"attachments": null,
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def create_df_from_csv(csv_path):\r\n",
+					"    data = pd.read_csv(csv_path, skip_blank_lines=True)\r\n",
+					"    data = data.dropna(how=\"all\").reset_index(drop=True)\r\n",
+					"    return data\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_Sparkcsv(df, cleaned_csv_path):\r\n",
+					"    sparkDF=spark.createDataFrame(df) \r\n",
+					"    display(sparkDF)\r\n",
+					"    sparkDF.printSchema()\r\n",
+					"    sparkDF.write.mode(\"overwrite\").option(\"header\",True).csv(cleaned_csv_path)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_SparkParquet(df, cleaned_parquet_path):\r\n",
+					"    sparkDF=spark.createDataFrame(df) \r\n",
+					"    display(sparkDF)\r\n",
+					"    sparkDF.printSchema()\r\n",
+					"    sparkDF.write.mode('overwrite').parquet(cleaned_parquet_path)\r\n",
+					"\r\n",
+					"\r\n",
+					"def read_csv(path):\r\n",
+					"    file = open(path, encoding='utf8')\r\n",
+					"    return csv.reader(file)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_json(df, json_path):\r\n",
+					"    df.to_json(json_path, orient='records', lines=True)\r\n",
+					"\r\n",
+					"\r\n",
+					"def df_to_csv(df, csv_path):\r\n",
+					"    df.to_csv(csv_path)\r\n",
+					"\r\n",
+					"\r\n",
+					"def dump_to_json(json_path, keys, data):\r\n",
+					"    row_number = 0\r\n",
+					"    data_dump = []\r\n",
+					"    with open(json_path, \"w\") as json_file:\r\n",
+					"        for row in data:\r\n",
+					"            if any(row):\r\n",
+					"                temp = dict(zip(keys, row))\r\n",
+					"                temp[\"review_id\"] = row_number\r\n",
+					"                row_number+=1\r\n",
+					"                data_dump.append(temp)\r\n",
+					"\r\n",
+					"        json.dump(data_dump, json_file, indent=4, sort_keys=True)"
+				],
+				"attachments": null,
+				"execution_count": 35
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def clean_data(product):\r\n",
+					"    clean_reviews.make_review_lowercase(product)\r\n",
+					"    clean_reviews.remove_urls(product)\r\n",
+					"    clean_reviews.remove_punctuations(product)\r\n",
+					"    clean_reviews.remove_emojis(product)\r\n",
+					"    clean_reviews.remove_multiple_dots(product)\r\n",
+					"    clean_reviews.remove_special_symbols(product)\r\n",
+					"    clean_reviews.remove_whitespace(product)\r\n",
+					"\r\n",
+					"    product.df['review'] = product.reviews_data\r\n",
+					"    product.df['review_id'] = product.reviews_data.index\r\n",
+					"\r\n",
+					"    #df_to_csv(product.df, csv_path)\r\n",
+					"    df_to_Sparkcsv(product.df, cleaned_csv_path)\r\n",
+					"    df_to_SparkParquet(product.df, cleaned_parquet_path)\r\n",
+					""
+				],
+				"attachments": null,
+				"execution_count": 36
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def sentiment_analysis(product):\r\n",
+					"    product.get_nouns()\r\n",
+					"    product.generate_binary_matrix()\r\n",
+					"    product.dump_binary_matrix(matrix_path)\r\n",
+					"    product.get_frequenct_items(freq_items_path)"
+				],
+				"attachments": null,
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"product = nlp()\r\n",
+					"print(\"ERROR\")\r\n",
+					"product.df = create_df_from_csv(data_path)\r\n",
+					"print(\"ERROR\")\r\n",
+					"clean_data(product)\r\n",
+					"print(\"ERROR\")\r\n",
+					"sentiment_analysis(product)\r\n",
+					"print(\"DONE\")"
+				],
+				"attachments": null,
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"attachments": null,
+				"execution_count": null
+			}
+		]
+	}
+}
