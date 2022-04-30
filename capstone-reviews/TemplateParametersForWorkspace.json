@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "capstone-reviews"
+		},
+		"AzureDataLakeStorage_accountKey": {
+			"value": ""
+		},
+		"AzureFunction_functionKey": {
+			"value": ""
+		},
+		"AzureMySql_connectionString": {
+			"value": ""
+		},
+		"MongoDbAtlas_connectionString": {
+			"value": ""
+		},
+		"capstone-reviews-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"synapse-reviews-WorkspaceDefaultSqlServer_connectionString": {
+			"value": ""
+		},
+		"AzureDataLakeStorage_properties_typeProperties_url": {
+			"value": "https://reviewsdatalake.dfs.core.windows.net"
+		},
+		"AzureFunction_properties_typeProperties_functionAppUrl": {
+			"value": "https://nexus-function-app.azurewebsites.net/api/HttpTriggerReviews?code=KMjC3HUi679er6DEBLm34lz68VeC9R3/pOMJBLEhc2JsahOehIPbxg=="
+		},
+		"MongoDbAtlas_properties_typeProperties_database": {
+			"value": "Product-reviews"
+		},
+		"capstone-reviews-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://reviewsdatalake.dfs.core.windows.net"
+		},
+		"synapse-reviews-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://datalakereviews.dfs.core.windows.net"
+		}
+	}
+}
