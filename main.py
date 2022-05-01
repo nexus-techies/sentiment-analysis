@@ -1,3 +1,4 @@
+import string
 from src import common_functions as common
 from src import language_processing as lp
 from src import clean_data as clean
@@ -16,9 +17,11 @@ def clean_data(product):
     clean.clean_reviews.remove_multiple_dots(product)
     clean.clean_reviews.remove_special_symbols(product)
     clean.clean_reviews.remove_whitespace(product)
-
+   
     product.df['review'] = product.reviews_data
     product.df['review_id'] = product.reviews_data.index
+    product.reviews_data.index = product.reviews_data.index.map(str)
+    product.df['Uid'] = f"AMAZON_" + product.reviews_data.index
 
     common.df_to_csv(product.df, csv_path)
 
