@@ -20,10 +20,6 @@
 					"body": {
 						"name": "Azure"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{
@@ -105,10 +101,6 @@
 					"body": {
 						"name": "Azure"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{
@@ -136,10 +128,6 @@
 					"body": {
 						"name": "Azure"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],

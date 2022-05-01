@@ -28,10 +28,6 @@
 						"value": "{\"name\":\"@{variables('url')}\"}\n",
 						"type": "Expression"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{

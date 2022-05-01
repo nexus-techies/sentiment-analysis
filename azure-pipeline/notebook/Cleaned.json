@@ -7,7 +7,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "nexuspool",
+			"referenceName": "reviewspool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -20,14 +20,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0d04e99b-e9b2-459c-a9f4-0f573a401be9"
+				"spark.autotune.trackingId": "50b87105-f00c-409c-93e6-3ab6d530a66e"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -37,10 +34,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/9595214b-b979-4c88-93c7-3a2e8742a403/resourceGroups/team-nexus/providers/Microsoft.Synapse/workspaces/synapse-reviews/bigDataPools/nexuspool",
-				"name": "nexuspool",
+				"id": "/subscriptions/f05bbc2d-3f86-4b23-8fa1-bcefa8c34a30/resourceGroups/capstone-nexus/providers/Microsoft.Synapse/workspaces/capstone-reviews/bigDataPools/reviewspool",
+				"name": "reviewspool",
 				"type": "Spark",
-				"endpoint": "https://synapse-reviews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/nexuspool",
+				"endpoint": "https://capstone-reviews.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/reviewspool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -49,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -63,9 +60,9 @@
 					"import nltk\r\n",
 					"from nltk import word_tokenize, pos_tag\r\n",
 					"import re\r\n",
-					"import string"
+					"import string\r\n",
+					"import time"
 				],
-				"attachments": null,
 				"execution_count": 16
 			},
 			{
@@ -82,12 +79,11 @@
 					}
 				},
 				"source": [
-					"data_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/**\"\r\n",
+					"\"\"\"data_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/ScrappedData/**\"\r\n",
 					"cleaned_csv_path = \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedCSV/\"\r\n",
 					"cleaned_parquet_path= \"abfss://reviews-sentimental-analysis@datalakereviews.dfs.core.windows.net/CleanedParquet/\"\r\n",
-					""
+					"\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 17
 			},
 			{
@@ -101,8 +97,7 @@
 				},
 				"source": [
 					"### NLP"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -118,7 +113,7 @@
 					}
 				},
 				"source": [
-					"class nlp:\r\n",
+					"\"\"\"class nlp:\r\n",
 					"\r\n",
 					"    def __init__(self) -> None:\r\n",
 					"        \"\"\"import nltk\r\n",
@@ -159,9 +154,8 @@
 					"\r\n",
 					"        for review in self.data:\r\n",
 					"            for noun in review['nouns']:\r\n",
-					"                self.binary_matrix[review['review_id']][self.net_nouns.index(noun)] = 1"
+					"                self.binary_matrix[review['review_id']][self.net_nouns.index(noun)] = 1\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 18
 			},
 			{
@@ -175,8 +169,7 @@
 				},
 				"source": [
 					"### Common Functions"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +185,7 @@
 					}
 				},
 				"source": [
-					"def create_df_from_csv(csv_path):\r\n",
+					"\"\"\"def create_df_from_csv(csv_path):\r\n",
 					"    data = pd.read_csv(csv_path, skip_blank_lines=True)\r\n",
 					"    data = data.dropna(how=\"all\").reset_index(drop=True)\r\n",
 					"    return data\r\n",
@@ -236,9 +229,8 @@
 					"                data_dump.append(temp)\r\n",
 					"\r\n",
 					"        json.dump(data_dump, json_file, indent=4, sort_keys=True)\r\n",
-					""
+					"\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 19
 			},
 			{
@@ -252,8 +244,7 @@
 				},
 				"source": [
 					"### Clean Reviews"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -269,7 +260,7 @@
 					}
 				},
 				"source": [
-					"class clean_reviews:\r\n",
+					"\"\"\"class clean_reviews:\r\n",
 					"    def make_review_lowercase(self):\r\n",
 					"        self.reviews_data = self.df['content'].str.lower()\r\n",
 					"\r\n",
@@ -325,9 +316,8 @@
 					"        def cleaning_dots(text):\r\n",
 					"            return re.sub('\\.+', '.', str(text))\r\n",
 					"\r\n",
-					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))"
+					"        self.reviews_data = self.reviews_data.apply(lambda x: cleaning_dots(x))\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 20
 			},
 			{
@@ -341,8 +331,7 @@
 				},
 				"source": [
 					"### Clean Data Function"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -358,7 +347,7 @@
 					}
 				},
 				"source": [
-					"def clean_data(product):\r\n",
+					"\"\"\"def clean_data(product):\r\n",
 					"    clean_reviews.make_review_lowercase(product)\r\n",
 					"    clean_reviews.remove_urls(product)\r\n",
 					"    clean_reviews.remove_punctuations(product)\r\n",
@@ -370,9 +359,8 @@
 					"    product.df['review_id'] = product.reviews_data.index\r\n",
 					"\r\n",
 					"    df_to_Sparkcsv(product.df, cleaned_csv_path)\r\n",
-					"    df_to_SparkParquet(product.df, cleaned_parquet_path)"
+					"    df_to_SparkParquet(product.df, cleaned_parquet_path)\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -386,8 +374,7 @@
 				},
 				"source": [
 					"### Sentiment Analysis Function"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -403,16 +390,15 @@
 					}
 				},
 				"source": [
-					"def sentiment_analysis(product):\r\n",
+					"\"\"\"def sentiment_analysis(product):\r\n",
 					"    csvreader = read_csv(cleaned_csv_path)\r\n",
 					"    header = next(csvreader)\r\n",
 					"\r\n",
 					"    dump_to_json(json_path, header, csvreader)\r\n",
 					"    product.get_nouns(json_path)\r\n",
 					"    product.generate_binary_matrix()\r\n",
-					"    product.dump_binary_matrix(matrix_path)"
+					"    product.dump_binary_matrix(matrix_path)\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -426,8 +412,7 @@
 				},
 				"source": [
 					"### MAIN CODE"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -443,9 +428,8 @@
 					}
 				},
 				"source": [
-					"product = nlp()"
+					"\"\"\"product = nlp()\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 23
 			},
 			{
@@ -463,11 +447,10 @@
 					"collapsed": false
 				},
 				"source": [
-					"product.df = create_df_from_csv(data_path)\r\n",
+					"\"\"\"product.df = create_df_from_csv(data_path)\r\n",
 					"d1f= product.df\r\n",
-					"display(d1f)"
+					"display(d1f)\"\"\""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -484,9 +467,8 @@
 					}
 				},
 				"source": [
-					"print(d1f.columns)"
+					"\"\"\"print(d1f.columns)\"\"\""
 				],
-				"attachments": null,
 				"execution_count": 25
 			},
 			{
@@ -504,9 +486,8 @@
 					"collapsed": false
 				},
 				"source": [
-					"clean_data(product)"
+					"\"\"\"clean_data(product)\"\"\""
 				],
-				"attachments": null,
 				"execution_count": null
 			},
 			{
@@ -525,8 +506,26 @@
 				"source": [
 					"#sentiment_analysis(product)"
 				],
-				"attachments": null,
 				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"time.sleep(30)\r\n",
+					"print(\"Executed Successfully\")"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -544,7 +543,6 @@
 				"source": [
 					""
 				],
-				"attachments": null,
 				"execution_count": null
 			}
 		]

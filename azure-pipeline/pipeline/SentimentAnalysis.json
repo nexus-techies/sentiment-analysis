@@ -28,10 +28,6 @@
 						"value": "{\"name\":\"@{variables('url')}\"}\n",
 						"type": "Expression"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
 				}
 			},
 			{
@@ -58,11 +54,7 @@
 						"referenceName": "Cleaned",
 						"type": "NotebookReference"
 					},
-					"snapshot": true,
-					"sparkPool": {
-						"referenceName": "nexuspool",
-						"type": "BigDataPoolReference"
-					}
+					"snapshot": true
 				}
 			},
 			{
