@@ -3,38 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Web Scrape Reviews - Store in Azure Blob",
-				"type": "AzureFunctionActivity",
-				"dependsOn": [
-					{
-						"activity": "Set Review Url",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"functionName": " HttpTriggerReviews ",
-					"method": "POST",
-					"body": {
-						"value": "{\"name\":\"@{variables('url')}\"}\n",
-						"type": "Expression"
-					}
-				},
-				"linkedServiceName": {
-					"referenceName": "AzureFunction",
-					"type": "LinkedServiceReference"
-				}
-			},
-			{
 				"name": "Cleaning Scrapped Data",
 				"type": "SynapseNotebook",
 				"dependsOn": [
@@ -215,6 +183,33 @@
 				"dependsOn": [
 					{
 						"activity": "Review Language Processing",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "Cleaned",
+						"type": "NotebookReference"
+					},
+					"snapshot": true
+				}
+			},
+			{
+				"name": "Web Scrape Reviews - Store in Azure Blob",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Set Review Url",
 						"dependencyConditions": [
 							"Succeeded"
 						]
