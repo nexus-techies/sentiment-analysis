@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8adb85f9-8f58-46d8-b46a-336e16359053"
+				"spark.autotune.trackingId": "5d36e38a-40d4-4ff3-a23f-1b1d9eaf3405"
 			}
 		},
 		"metadata": {
@@ -54,14 +54,14 @@
 			{
 				"cell_type": "code",
 				"source": [
-					"\"\"import json\r\n",
+					"\"\"\"import json\r\n",
 					"import numpy as np\r\n",
 					"import pandas as pd\r\n",
 					"import nltk\r\n",
 					"from nltk import word_tokenize, pos_tag\r\n",
 					"import re\r\n",
 					"import string\r\n",
-					"import time\"\""
+					"import time\"\"\""
 				],
 				"execution_count": 16
 			},
